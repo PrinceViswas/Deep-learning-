@@ -1,1 +1,51 @@
+import numpy as np
 
+class McCullochPittsNeuron:
+    def __init__(self, weights, bias, threshold=0):
+        self.weights = np.array(weights)
+        self.bias = bias
+        self.threshold = threshold
+    
+    def activate(self, inputs):
+        # Calculate weighted sum
+        weighted_sum = np.dot(inputs, self.weights) + self.bias
+        # Apply step function (threshold activation)
+        return 1 if weighted_sum > self.threshold else 0
+
+def test_logic_gate(gate_name, neuron, inputs):
+    print(f"\n{gate_name} Gate Truth Table:")
+    print("Inputs | Output")
+    print("-" * 15)
+    for input_combo in inputs:
+        output = neuron.activate(input_combo)
+        print(f"{input_combo} |   {output}")
+
+def main():
+    # Input combinations for two-input gates
+    inputs_2 = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    # Input combinations for NOT gate (single input)
+    inputs_1 = np.array([[0], [1]])
+
+    # AND Gate: w1=1, w2=1, bias=-1.5, threshold=0
+    and_neuron = McCullochPittsNeuron(weights=[1, 1], bias=-1.5)
+    test_logic_gate("AND", and_neuron, inputs_2)
+
+    # OR Gate: w1=1, w2=1, bias=-0.5, threshold=0
+    or_neuron = McCullochPittsNeuron(weights=[1, 1], bias=-0.5)
+    test_logic_gate("OR", or_neuron, inputs_2)
+
+    # NOT Gate: w1=-1, bias=0.5, threshold=0
+    not_neuron = McCullochPittsNeuron(weights=[-1], bias=0.5)
+    test_logic_gate("NOT", not_neuron, inputs_1)
+
+    # NOR Gate: w1=-1, w2=-1, bias=0.5, threshold=0
+    nor_neuron = McCullochPittsNeuron(weights=[-1, -1], bias=0.5)
+    test_logic_gate("NOR", nor_neuron, inputs_2)
+
+    # XOR Gate: Cannot be implemented with a single McCulloch-Pitts neuron
+    print("\nXOR Gate:")
+    print("XOR cannot be implemented with a single McCulloch-Pitts neuron as it is not linearly separable.")
+    print("It requires a multi-layer network.")
+
+if __name__ == "__main__":
+    main()
